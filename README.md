@@ -15,6 +15,7 @@ Chat with XMPP protocol. Implementation with python and SleekXMPP
 
 ## Installation
 git clone https://github.com/arr16774/proyredes1
+
 pip install Sleekxmpp
 
 python chat.py
