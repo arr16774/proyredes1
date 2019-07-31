@@ -11,7 +11,6 @@ if sys.version_info < (3, 0):
 else:
     raw_input = input
 
-import time
 
 class Cliente(sleekxmpp.ClientXMPP):
 
@@ -28,8 +27,8 @@ class Cliente(sleekxmpp.ClientXMPP):
 
     def message(self, msg):
         if msg['type'] in ('normal', 'chat'):
-            self.send_message(mto=msg['from'],
-                              mbody='Thanks for sending:\n%s' % msg['body'])
+            print(msg['from'])
+            print(msg['body'])
 
     def register(self, iq):
         print('nani2')
@@ -49,6 +48,18 @@ class Cliente(sleekxmpp.ClientXMPP):
             logging.error("No response from server.")
             self.disconnect()
 
+    def get_friends(self):
+        listaamigos = self.client_roster
+        print(listaamigos)
+
+    def send_files(self,jid,receiver, filename):
+
+        stream = self['xep_0047'].open_stream(receiver)
+
+        with open(filename) as f:
+            data = f.read()
+            stream.sendall(data)
+
     def delete_account(self):
         resp = self.Iq()
         resp['type'] = 'set'
@@ -66,6 +77,7 @@ class Cliente(sleekxmpp.ClientXMPP):
         except IqTimeout:
             logging.error("No response from server.")
             self.disconnect()
+
 
 if __name__ == '__main__':
     optp = OptionParser()
@@ -85,6 +97,10 @@ if __name__ == '__main__':
                     help="JID to use")
     optp.add_option("-p", "--password", dest="password",
                     help="password to use")
+    optp.add_option("-r", "--receiver", dest="receiver",
+                    help="JID to use")
+    optp.add_option("-f", "--file", dest="filename",
+                    help="JID to use")
     opts, args = optp.parse_args()
     logging.basicConfig(level=opts.loglevel, format='%(levelname)-8s %(message)s')
 
@@ -104,6 +120,7 @@ if __name__ == '__main__':
     xmpp.register_plugin('xep_0060')
     xmpp.register_plugin('xep_0199')
     xmpp.register_plugin('xep_0077')
+    xmpp.register_plugin('xep_0047')
     xmpp['xep_0077'].force_registration = True
     xmpp['feature_mechanisms'].unencrypted_plain = True
 
@@ -113,6 +130,8 @@ if __name__ == '__main__':
             print('1. Close Session')
             print('2. Delete Account')
             print('3. Send Private Message')
+            print('4. Send Friend Request')
+            print('5. Show Friends')
             input_client = raw_input('->')
 
             if input_client == str(1):
@@ -125,7 +144,20 @@ if __name__ == '__main__':
                 xmpp.disconnect()
                 break
             if input_client == str(3):
-                mto1 = raw_input('Para quien:')
+                mto1 = raw_input('To: ')
                 mbody1 = raw_input('->')
-                xmpp.send_message(mto= mto1, mbody=mbody1, mtype='chat')
+                xmpp.send_message(mto=mto1, mbody=mbody1, mtype='chat')
+            if input_client == str(4):
+                usuario = raw_input('Add User: ')
+                xmpp.send_presence_subscription(pto=usuario,
+                                                ptype='subscribe')
+            if input_client == str(5):
+                xmpp.get_friends()
+
+            if input_client == str(6):
+                opts.receiver = raw_input("Receiver: ")
+                opts.filename = raw_input("File path: ")
+
+                xmpp.send_files(opts.jid,opts.receiver, opts.filename)
+
     xmpp.process()
