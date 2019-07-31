@@ -12,9 +12,7 @@ Chat with XMPP protocol. Implementation with python and SleekXMPP
 9. -[ ]  Define a status
 10.-[ ]  Receive Notifications
 11.-[ ]  Send/Receive Files
-
 ##Installation
-
 git clone https://github.com/arr16774/proyredes1
 pip install Sleekxmpp
 
