@@ -16,9 +16,15 @@ class Cliente(sleekxmpp.ClientXMPP):
 
     def __init__(self, jid, password):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
+        self.register_plugin('xep_0030')  #
+        self.register_plugin('xep_0047', {
+            'auto_accept': True
+        })  # In-band Bytestreams
         self.add_event_handler("session_start", self.start, threaded=True)
         self.add_event_handler("message", self.message)
         self.add_event_handler("register", self.register, threaded=True)
+        self.add_event_handler("ibb_stream_start", self.stream_opened, threaded=True)
+        self.add_event_handler("ibb_stream_data", self.stream_data)
 
     def start(self, event):
         print('nani')
@@ -50,15 +56,24 @@ class Cliente(sleekxmpp.ClientXMPP):
 
     def get_friends(self):
         listaamigos = self.client_roster
-        print(listaamigos)
+        print(listaamigos.keys())
 
-    def send_files(self,jid,receiver, filename):
+    def send_files(self,receiver, filename):
 
         stream = self['xep_0047'].open_stream(receiver)
 
         with open(filename) as f:
             data = f.read()
             stream.sendall(data)
+
+    def accept_stream(self, iq):
+        return True
+
+    def stream_opened(self, stream):
+        print('Stream opened: %s from %s' % (stream.sid, stream.peer_jid))
+
+    def stream_data(self, event):
+        print(event['data'])
 
     def delete_account(self):
         resp = self.Iq()
@@ -132,6 +147,8 @@ if __name__ == '__main__':
             print('3. Send Private Message')
             print('4. Send Friend Request')
             print('5. Show Friends')
+            print('6. Send Files')
+            print('7. Show contact info')
             input_client = raw_input('->')
 
             if input_client == str(1):
@@ -155,9 +172,12 @@ if __name__ == '__main__':
                 xmpp.get_friends()
 
             if input_client == str(6):
-                opts.receiver = raw_input("Receiver: ")
-                opts.filename = raw_input("File path: ")
-
-                xmpp.send_files(opts.jid,opts.receiver, opts.filename)
+                receiver1 = raw_input('To: ')
+                filename1 = raw_input('Filename: ')
+                xmpp.send_files(receiver1, filename1)
+            if input_client == str(7):
+                friend = xmpp.client_roster
+                hola = raw_input('Username: ')
+                print(friend[hola])
 
     xmpp.process()
