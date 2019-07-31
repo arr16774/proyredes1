@@ -26,16 +26,18 @@ class Cliente(sleekxmpp.ClientXMPP):
         self.add_event_handler("ibb_stream_start", self.stream_opened, threaded=True)
         self.add_event_handler("ibb_stream_data", self.stream_data)
 
+    #definicion del inicio
     def start(self, event):
-        print('nani')
         self.send_presence()
         self.get_roster()
 
+    #funcion para mostrar mensaje
     def message(self, msg):
         if msg['type'] in ('normal', 'chat'):
             print(msg['from'])
             print(msg['body'])
 
+    #funcion de registrar usuario
     def register(self, iq):
         print('nani2')
         resp = self.Iq()
@@ -54,10 +56,12 @@ class Cliente(sleekxmpp.ClientXMPP):
             logging.error("No response from server.")
             self.disconnect()
 
+    #mostrar amigos
     def get_friends(self):
         listaamigos = self.client_roster
         print(listaamigos.keys())
 
+    #metodo no funciona, supuestamente manda archivos y recibe
     def send_files(self,receiver, filename):
 
         stream = self['xep_0047'].open_stream(receiver)
@@ -66,6 +70,7 @@ class Cliente(sleekxmpp.ClientXMPP):
             data = f.read()
             stream.sendall(data)
 
+    #aceptar stream
     def accept_stream(self, iq):
         return True
 
@@ -75,6 +80,7 @@ class Cliente(sleekxmpp.ClientXMPP):
     def stream_data(self, event):
         print(event['data'])
 
+    #metodo de eliminar cuenta
     def delete_account(self):
         resp = self.Iq()
         resp['type'] = 'set'
@@ -152,6 +158,7 @@ if __name__ == '__main__':
             input_client = raw_input('->')
 
             if input_client == str(1):
+                #desconectar cliente
                 print('...Disconnecting...')
                 xmpp.disconnect()
                 print('Disconnected')
