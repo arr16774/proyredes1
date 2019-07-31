@@ -14,7 +14,7 @@ Chat with XMPP protocol. Implementation with python and SleekXMPP
 11.-[ ]  Send/Receive Files
 
 ## Installation
-git clone https://github.com/arr16774/proyredes1
+git clone: https://github.com/arr16774/proyredes1
 
 pip install Sleekxmpp
 
