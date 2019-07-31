@@ -1,6 +1,6 @@
 # Chat XMPP
 Chat with XMPP protocol. Implementation with python and SleekXMPP
-##Requirements
+## Requirements
 1. -[x] Register
 2. -[x] Log in
 3. -[x] Disconnect Session
@@ -13,7 +13,7 @@ Chat with XMPP protocol. Implementation with python and SleekXMPP
 10.-[ ]  Receive Notifications
 11.-[ ]  Send/Receive Files
 
-##Installation
+## Installation
 git clone https://github.com/arr16774/proyredes1
 pip install Sleekxmpp
 
