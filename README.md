@@ -10,8 +10,8 @@ Chat with XMPP protocol. Implementation with python and SleekXMPP
 7. -[x] Communication 1 on 1
 8. -[ ]  MultiChat
 9. -[ ]  Define a status
-10.-[ ]  Receive Notifications
-11.-[ ]  Send/Receive Files
+10. -[ ]  Receive Notifications
+11. -[ ]  Send/Receive Files
 
 ## Installation
 git clone: https://github.com/arr16774/proyredes1
